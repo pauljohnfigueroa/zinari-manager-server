@@ -11,6 +11,9 @@ import { fileURLToPath } from 'url'
 
 import corsOptions from './config/corsOptions.js'
 
+
+import authRoutes from './routes/auth.js'
+
 import { register } from './controllers/auth.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -45,10 +48,13 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
+
 /* Routes with File Uploads */
+app.post('/auth/register', upload.single('photo'), register)
 
 /* Routes */
-app.post('/auth/register', upload.single('photo'), register)
+app.use('/auth', authRoutes)
+
 
 
 /* Database */
