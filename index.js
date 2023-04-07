@@ -11,9 +11,9 @@ import { fileURLToPath } from 'url'
 
 import corsOptions from './config/corsOptions.js'
 
-
 import authRoutes from './routes/auth.js'
 import userRoutes from './routes/users.js'
+import taskRoutes from './routes/tasks.js'
 
 import { register } from './controllers/auth.js'
 
@@ -56,6 +56,7 @@ app.post('/auth/register', upload.single('photo'), register)
 /* Routes */
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
+app.use('/tasks', taskRoutes)
 
 
 /* Database */
