@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 import Task from '../models/Task.js'
 import User from '../models/User.js'
 
@@ -77,4 +79,45 @@ export const getTasks = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
+}
+
+export const updateTask = async (req, res) => {
+
+    const { id } = req.params
+
+    try {
+        // check if _id is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ error: "No such ID." })
+        }
+
+        const task = await Task.findByIdAndUpdate({ _id: id }, { ...req.body })
+        if (!task) return res.status(400).json({ error: "No such task." })
+
+        res.status(200).json(task)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const deleteTask = async (req, res) => {
+
+    const { id } = req.params
+
+    try {
+        // check if _id is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ error: "No such ID." })
+        }
+
+        const task = await Task.findByIdAndDelete({ _id: id })
+        if (!task) return res.status(400).json({ error: "No such task." })
+
+        res.status(200).json(task)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+
 }
