@@ -15,6 +15,7 @@ import authRoutes from './routes/auth.js'
 import userRoutes from './routes/users.js'
 import taskRoutes from './routes/tasks.js'
 import teamRoutes from './routes/teams.js'
+import projectRoutes from './routes/projects.js'
 
 import { register } from './controllers/auth.js'
 
@@ -59,6 +60,7 @@ app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/tasks', taskRoutes)
 app.use('/teams', teamRoutes)
+app.use('/projects', projectRoutes)
 
 
 /* Database */
