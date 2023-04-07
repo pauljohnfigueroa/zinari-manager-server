@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import User from './models/User.js'
+import User from '../models/User.js'
 
 
 export const register = async (req, res) => {
@@ -11,11 +11,12 @@ export const register = async (req, res) => {
             firstName,
             lastName,
             extName,
-            phone,
             email,
+            phone,
             password,
             password2,
             roles,
+            photo,
             departments,
             branches,
             teams,
@@ -27,7 +28,7 @@ export const register = async (req, res) => {
         if (password !== password2) return { "error": "Password must match." }
 
         // password salt
-        const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt()
         // password hash
         const passwordHash = await bcrypt.hash(password, salt)
 
@@ -40,6 +41,7 @@ export const register = async (req, res) => {
             email,
             password: passwordHash,
             roles,
+            photo,
             departments,
             branches,
             teams,
@@ -56,7 +58,7 @@ export const register = async (req, res) => {
         res.status(201).json(savedUser)
 
     } catch (error) {
-
+        res.status(500).json({ error: error.message })
     }
 }
 
