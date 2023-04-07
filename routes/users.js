@@ -6,9 +6,8 @@ const router = express.Router()
 import {
     getUser,
     getUsers,
-    // getUserProjects,
-    // getUserTeams,
-    // getUserTasks
+    updateUser,
+    deleteUser
 } from '../controllers/users.js'
 
 import { verifyToken } from '../middleware/auth.js'
@@ -16,15 +15,11 @@ import { verifyToken } from '../middleware/auth.js'
 /* Read Routes */
 router.get('/:id', verifyToken, getUser)
 router.get('/', verifyToken, getUsers)
-// router.get('/:id/tasks', verifyToken, getTasks)
-// router.get('/:id/projects', verifyToken, getProjects)
-// router.get('/:id/teams', verifyToken, getTeams)
 
 /* Update Routes */
-// router.patch('/:userId/tasks/:taskId', verifyToken, updateUserTask)
-// router.patch('/:userId/teams/:teamsId', verifyToken, joinLeaveTeam)
+router.patch('/:id', verifyToken, updateUser)
 
 /* Delete Routes */
-// router.delete('/:userId/tasks/:taskId', verifyToken, deleteUserTask)
+router.delete('/:id', verifyToken, deleteUser)
 
 export default router

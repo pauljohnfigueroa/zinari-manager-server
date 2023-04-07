@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import User from '../models/User.js'
 
 /* 
@@ -32,3 +33,43 @@ export const getUsers = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const updateUser = async (req, res) => {
+
+    const { id } = req.params
+
+    try {
+        // check if _id is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ error: "No such ID." })
+        }
+
+        const user = await User.findOneAndUpdate({ _id: id }, { ...req.body })
+        if (!user) return res.status(400).json({ error: 'User does not exist.' })
+
+        res.status(200).json(user)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        // check if _id is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ error: "No such ID." })
+        }
+
+        const user = await User.findOneAndDelete({ _id: id })
+        if (!user) return res.status(400).json({ error: 'User does not exist.' })
+
+        res.status(200).json(user)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
