@@ -4,10 +4,25 @@ import { verifyToken } from '../middleware/auth.js'
 
 const router = express.Router()
 
-import { getProject, createProject, getProjects } from '../controllers/projects.js'
+import {
+    getProject,
+    createProject,
+    getProjects,
+    updateProject,
+    deleteProject
+} from '../controllers/projects.js'
 
-router.get('/:id', verifyToken, getProject)
+/* Create Routes */
 router.post('/', verifyToken, createProject)
+
+/* Read Routes */
+router.get('/:id', verifyToken, getProject)
 router.get('/', verifyToken, getProjects)
+
+/* Update Routes */
+router.patch('/:id', verifyToken, updateProject)
+
+/* Delete Routes */
+router.delete('/:id', verifyToken, deleteProject)
 
 export default router
