@@ -5,12 +5,22 @@ import { verifyToken } from '../middleware/auth.js'
 
 import {
     createTeam,
+    deleteTeam,
     getTeam,
-    getTeams
+    getTeams,
+    updateTeam
 } from '../controllers/teams.js'
 
-router.get('/:id', verifyToken, getTeam)
+/* Create Routes */
 router.post('/', verifyToken, createTeam)
+
+/* Read Routes */
+router.get('/:id', verifyToken, getTeam)
 router.get('/', verifyToken, getTeams)
 
+/* Update Routes */
+router.patch('/:id', verifyToken, updateTeam)
+
+/* Delete Routes */
+router.delete('/:id', verifyToken, deleteTeam)
 export default router
