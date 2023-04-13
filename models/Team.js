@@ -13,6 +13,8 @@ const TeamSchema = new mongoose.Schema({
     projects: Array,
     members: Array,
     leader: String
+}, {
+    timestamps: true
 })
 const Team = mongoose.model('Team', TeamSchema)
 export default Team

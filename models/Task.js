@@ -4,7 +4,6 @@ const TaskSchema = new mongoose.Schema({
     owner: String,
     title: {
         type: String,
-        required: true,
         max: 100
     },
     description: {
@@ -15,7 +14,7 @@ const TaskSchema = new mongoose.Schema({
     status: String,
     priority: String,
     category: String,
-    dueDate: Date
+    dueDate: String
 }, {
     timestamps: true
 })

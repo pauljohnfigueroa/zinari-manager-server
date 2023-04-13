@@ -11,27 +11,23 @@ export const createTask = async (req, res) => {
     try {
         // coming from the add task user form in the front end
         const {
-            userId,
+            email,
             title,
             description,
-            comments,
-            status,
             priority,
             category,
             dueDate
         } = req.body
 
-        const user = await User.findById(userId)
-        if (!user.extName) user.extName = ''
-        const fullName = `${user.firstName} ${user.lastName} ${user.extName}`
+        // const user = await User.findById(userId)
+        //if (!user.extName) user.extName = ''
+        //const fullName = `${user.firstName} ${user.lastName}`
 
         // new Task()
         const newTask = new Task({
-            owner: fullName.trim(),
+            owner: email,
             title,
             description,
-            comments,
-            status,
             priority,
             category,
             dueDate

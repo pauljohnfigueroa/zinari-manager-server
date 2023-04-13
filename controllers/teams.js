@@ -6,20 +6,22 @@ import User from "../models/User.js";
 export const createTeam = async (req, res) => {
     try {
         const {
-            userId,
+            leader,
             name,
             description,
-            leader
+            members
+
         } = req.body
 
-        const user = await User.findById(userId)
-        if (!user.extName) user.extName = ''
-        const fullName = `${user.firstName} ${user.lastName} ${user.extName}`
+        // const user = await User.findById(userId)
+        // if (!user.extName) user.extName = ''
+        // const fullName = `${user.firstName} ${user.lastName} ${user.extName}`
 
         const newTeam = new Team({
             name,
             description,
-            leader: fullName.trim()
+            leader,
+            members
         })
 
         const savedTeam = await newTeam.save()

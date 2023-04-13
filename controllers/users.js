@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import User from '../models/User.js'
-
+import Team from '../models/Team.js'
 /* 
     April 7, 2023
     Get a single user from the database using the id parameter.
@@ -28,6 +28,23 @@ export const getUsers = async (req, res) => {
         const users = await User.find().select({ password: 0 })
         // send user data to front-end
         res.status(200).json(users)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const getUserTeams = async (req, res) => {
+    try {
+        const { email } = req.body
+        const user = await User.find({ email })
+
+        //console.log(user.email)
+        // use the id to find the user and exclude the password 
+        const teams = await Team.find({ leader: user[0].email })
+
+        // send user data to front-end
+        res.status(200).json(teams)
 
     } catch (error) {
         res.status(500).json({ error: error.message })

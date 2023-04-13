@@ -11,8 +11,12 @@ const ProjectSchema = new mongoose.Schema({
         max: 200
     },
     teams: Array,
+    tasks: Array,
     manager: String,
-    tasks: Array
+    dueDate: String
+}, {
+    timestamps: true
 })
+
 const Project = mongoose.model('Project', ProjectSchema)
 export default Project
