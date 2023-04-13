@@ -34,16 +34,16 @@ export const getUsers = async (req, res) => {
     }
 }
 
+/* 
+    Get teams that belong to a user based on email
+*/
 export const getUserTeams = async (req, res) => {
     try {
         const { email } = req.body
-        const user = await User.find({ email })
+        // use the user's email to find the teams
+        const teams = await Team.find({ leader: email })
 
-        //console.log(user.email)
-        // use the id to find the user and exclude the password 
-        const teams = await Team.find({ leader: user[0].email })
-
-        // send user data to front-end
+        // send team data to the front-end
         res.status(200).json(teams)
 
     } catch (error) {
