@@ -13,7 +13,7 @@ export const createRole = async (req, res) => {
     const { createdBy, name, description, permissions } = req.body
 
     const newRole = new Role({
-      createdBy: email,
+      createdBy,
       name,
       description,
       permissions

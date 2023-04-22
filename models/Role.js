@@ -11,7 +11,7 @@ const RoleSchema = new mongoose.Schema(
       type: String,
       max: 200
     },
-    permissions: String
+    permissions: Array
   },
   {
     timestamps: true

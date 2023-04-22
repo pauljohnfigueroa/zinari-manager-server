@@ -16,6 +16,7 @@ import userRoutes from './routes/users.js'
 import taskRoutes from './routes/tasks.js'
 import teamRoutes from './routes/teams.js'
 import projectRoutes from './routes/projects.js'
+import roleRoutes from './routes/roles.js'
 
 import { register } from './controllers/auth.js'
 
