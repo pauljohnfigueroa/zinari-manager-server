@@ -10,12 +10,7 @@ export const createTeam = async (req, res) => {
             name,
             description,
             members
-
         } = req.body
-
-        // const user = await User.findById(userId)
-        // if (!user.extName) user.extName = ''
-        // const fullName = `${user.firstName} ${user.lastName} ${user.extName}`
 
         const newTeam = new Team({
             name,

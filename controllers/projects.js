@@ -6,19 +6,20 @@ import User from '../models/User.js'
 export const createProject = async (req, res) => {
     try {
         const {
-            userId,
-            title,
-            description
+            email,
+            name,
+            description,
+            manager,
+            teams,
+            tasks
         } = req.body
 
-        const user = await User.findById(userId)
-        if (!user.extName) user.extName = ''
-        const fullName = `${user.firstName} ${user.lastName} ${user.extName}`
-
         const newProject = new Project({
-            title,
+            name,
             description,
-            manager: fullName.trim()
+            manager: email,
+            teams,
+            tasks
         })
         const savedProject = await newProject.save()
 

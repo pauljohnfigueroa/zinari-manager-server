@@ -1,8 +1,10 @@
+/* April 7, 2023 */
+
 import mongoose from 'mongoose'
 import User from '../models/User.js'
 import Team from '../models/Team.js'
+
 /* 
-    April 7, 2023
     Get a single user from the database using the id parameter.
 */
 export const getUser = async (req, res) => {
@@ -22,6 +24,9 @@ export const getUser = async (req, res) => {
     }
 }
 
+/* 
+    Get all users
+*/
 export const getUsers = async (req, res) => {
     try {
         // use the id to find the user and exclude the password 
@@ -35,7 +40,7 @@ export const getUsers = async (req, res) => {
 }
 
 /* 
-    Get teams that belong to a user based on email
+    Get user's teams based on email.
 */
 export const getUserTeams = async (req, res) => {
     try {
@@ -51,6 +56,9 @@ export const getUserTeams = async (req, res) => {
     }
 }
 
+/* 
+    Update a user
+*/
 export const updateUser = async (req, res) => {
 
     const { id } = req.params
@@ -71,6 +79,9 @@ export const updateUser = async (req, res) => {
     }
 }
 
+/* 
+    Update a user or multiple users
+*/
 export const deleteUser = async (req, res) => {
     const { id } = req.params
 

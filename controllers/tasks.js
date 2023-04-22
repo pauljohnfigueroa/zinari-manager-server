@@ -19,11 +19,6 @@ export const createTask = async (req, res) => {
             dueDate
         } = req.body
 
-        // const user = await User.findById(userId)
-        //if (!user.extName) user.extName = ''
-        //const fullName = `${user.firstName} ${user.lastName}`
-
-        // new Task()
         const newTask = new Task({
             owner: email,
             title,
