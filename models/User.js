@@ -33,19 +33,19 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    roles: {
-      type: Array,
+    role: {
+      type: String,
       required: false
     },
     photo: {
       type: String,
       required: false
     },
-    departments: {
+    department: {
       type: Array,
       required: false
     },
-    branches: {
+    branch: {
       type: Array,
       required: false
     },
