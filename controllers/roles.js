@@ -35,9 +35,9 @@ export const createRole = async (req, res) => {
 export const getRole = async (req, res) => {
   try {
     // get the role's id from the parameters
-    const { id } = req.params
+    const { name } = req.params
     // use the id to find the user and exclude the password
-    const role = await Role.findById(id)
+    const role = await Role.find({ name })
     // to exclude the password, you can also do it this way.
     // role.password = undefined
 

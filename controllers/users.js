@@ -65,7 +65,6 @@ export const updateUser = async (req, res) => {
     extName,
     email,
     phone,
-    password,
     role,
     photo,
     department,
@@ -78,18 +77,18 @@ export const updateUser = async (req, res) => {
   } = req.body
 
   // password salt
-  const salt = await bcrypt.genSalt()
+  // const salt = await bcrypt.genSalt()
   // password hash
-  const passwordHash = await bcrypt.hash(password, salt)
+  // const passwordHash = await bcrypt.hash(password, salt)
   // replace the clear text password with the hashed password
-  const userData = { ...req.body, password: passwordHash }
+  // const userData = { ...req.body, password: passwordHash }
 
   try {
     // check if _id is valid
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ error: 'No such ID.' })
     }
-    const user = await User.findOneAndUpdate({ _id: id }, { ...userData })
+    const user = await User.findOneAndUpdate({ _id: id }, { ...req.body })
     // do not send password to the front-end
     user.password = undefined
     if (!user) return res.status(400).json({ error: 'User does not exist.' })

@@ -7,7 +7,7 @@ import { createRole, getRole, getRoles, updateRole, deleteRole } from '../contro
 import { verifyToken } from '../middleware/auth.js'
 
 /* Read Routes */
-router.get('/:id', verifyToken, getRole)
+router.get('/:name', verifyToken, getRole)
 router.post('/', verifyToken, createRole)
 router.get('/', verifyToken, getRoles)
 
