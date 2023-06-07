@@ -52,8 +52,9 @@ export const getTask = async (req, res) => {
 
 export const getTasks = async (req, res) => {
   try {
-    // use the id to find the task and exclude the password
-    const task = await Task.find()
+    const { userId } = req.body
+    // find tasks with owner of userId
+    const task = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
     // send task data to front-end
     res.status(200).json(task)
   } catch (error) {

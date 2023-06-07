@@ -16,7 +16,7 @@ export const getUser = async (req, res) => {
     const user = await User.findById(id).select({ password: 0 })
     // to exclude the password, you can also do it this way.
     // user.password = undefined
-    console.log('user', user)
+    //console.log('user', user)
     // send user data to front-end
     res.status(200).json(user)
   } catch (error) {
