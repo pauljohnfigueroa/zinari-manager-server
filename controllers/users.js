@@ -1,5 +1,5 @@
 /* April 7, 2023 */
-import bcrypt from 'bcrypt'
+// import bcrypt from 'bcrypt'
 
 import mongoose from 'mongoose'
 import User from '../models/User.js'
@@ -16,7 +16,7 @@ export const getUser = async (req, res) => {
     const user = await User.findById(id).select({ password: 0 })
     // to exclude the password, you can also do it this way.
     // user.password = undefined
-
+    console.log('user', user)
     // send user data to front-end
     res.status(200).json(user)
   } catch (error) {
@@ -75,13 +75,6 @@ export const updateUser = async (req, res) => {
     digitalSignature,
     createdBy
   } = req.body
-
-  // password salt
-  // const salt = await bcrypt.genSalt()
-  // password hash
-  // const passwordHash = await bcrypt.hash(password, salt)
-  // replace the clear text password with the hashed password
-  // const userData = { ...req.body, password: passwordHash }
 
   try {
     // check if _id is valid

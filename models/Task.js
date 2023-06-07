@@ -2,7 +2,9 @@ import mongoose from 'mongoose'
 
 const TaskSchema = new mongoose.Schema(
   {
-    owner: String,
+    owner: {
+      type: mongoose.Schema.Types.ObjectId
+    },
     title: {
       type: String,
       max: 100
@@ -11,6 +13,7 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       max: 200
     },
+    comments: Array,
     status: String,
     priority: String,
     category: String,
