@@ -43,9 +43,11 @@ export const getUsers = async (req, res) => {
 */
 export const getUserTeams = async (req, res) => {
   try {
-    const { email } = req.body
+    const { userId } = req.body
     // use the user's email to find the teams
-    const teams = await Team.find({ leader: email })
+    const teams = await Team.find({
+      leader: new mongoose.Types.ObjectId(userId)
+    })
 
     // send team data to the front-end
     res.status(200).json(teams)

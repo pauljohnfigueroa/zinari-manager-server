@@ -17,7 +17,10 @@ const TeamSchema = new mongoose.Schema(
         ref: 'User'
       }
     ],
-    leader: mongoose.Schema.Types.ObjectId
+    leader: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   },
   {
     timestamps: true
