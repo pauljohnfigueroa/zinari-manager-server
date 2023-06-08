@@ -41,17 +41,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false
     },
-    department: {
-      type: Array,
-      required: false
-    },
-    branch: {
-      type: Array,
-      required: false
-    },
-    teams: Array,
-    projects: Array,
-    tasks: Array,
+    department: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department'
+      }
+    ],
+    branch: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch'
+      }
+    ],
     digitalSignature: String,
     createdBy: String
   },

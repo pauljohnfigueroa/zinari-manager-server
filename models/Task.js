@@ -13,7 +13,12 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       max: 200
     },
-    comments: Array,
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment'
+      }
+    ],
     status: String,
     priority: String,
     category: String,
