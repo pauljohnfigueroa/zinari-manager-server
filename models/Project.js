@@ -13,8 +13,7 @@ const ProjectSchema = new mongoose.Schema(
 		},
 		teams: [
 			{
-				// type: mongoose.Schema.Types.ObjectId,
-				type: String,
+				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Team'
 			}
 		],

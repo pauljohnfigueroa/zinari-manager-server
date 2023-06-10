@@ -6,13 +6,15 @@ import User from '../models/User.js'
 export const createProject = async (req, res) => {
 	try {
 		const { email, name, description, dueDate, teams, tasks } = req.body
+		// extract the _id
+		const teamIds = teams.map(item => item[0])
 
 		const newProject = new Project({
 			name,
 			description,
 			manager: email,
 			dueDate,
-			teams,
+			teams: teamIds,
 			tasks
 		})
 		const savedProject = await newProject.save()
