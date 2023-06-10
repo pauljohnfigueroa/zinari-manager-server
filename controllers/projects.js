@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 import Project from '../models/Project.js'
-import User from '../models/User.js'
+// import User from '../models/User.js'
 
 export const createProject = async (req, res) => {
 	try {
