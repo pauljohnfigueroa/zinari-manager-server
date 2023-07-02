@@ -7,7 +7,7 @@ export const createTeam = async (req, res) => {
 	try {
 		const { leader, name, description, members } = req.body
 		// get the _id of each member
-		const memberIds = members.map(item => item[0])
+		const memberIds = members.map(item => item.split('|')[0])
 
 		const newTeam = new Team({
 			name,
@@ -51,7 +51,10 @@ export const updateTeam = async (req, res) => {
 			return res.status(404).json({ error: 'No such ID.' })
 		}
 
-		const team = await Team.findByIdAndUpdate({ _id: id }, { ...req.body })
+		const { teamMembers } = req.body
+		const teamMemberIds = teamMembers.map(member => member.split('|')[0])
+
+		const team = await Team.findByIdAndUpdate({ _id: id }, { ...req.body, members: teamMemberIds })
 		if (!team) return res.status(400).json({ error: 'No such team.' })
 
 		res.status(200).json(team)

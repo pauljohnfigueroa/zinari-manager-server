@@ -28,9 +28,47 @@ export const getUsers = async (req, res) => {
 export const getUserTeams = async (req, res) => {
 	try {
 		const { userId } = req.body
-		const teams = await Team.find({
-			leader: new mongoose.Types.ObjectId(userId)
-		})
+		// const teams = await Team.find({
+		// 	leader: new mongoose.Types.ObjectId(userId)
+		// })
+
+		const teams = await Team.aggregate([
+			{
+				$match: { leader: new mongoose.Types.ObjectId(userId) }
+			},
+
+			// {
+			// 	$project: {
+			// 		firstName: 1,
+			// 		lastName: 1,
+			// 		members: 1,
+			// 		leader: 1,
+			// 		photo: 1
+			// 	}
+			// },
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			}
+			// {
+			// 	$project: {
+			// 		teamLeader: { firstName: 1, lastName: 1 },
+			// 		teamMembers: { firstName: 1, lastName: 1, photo: 1 }
+			// 	}
+			// }
+		])
 		res.status(200).json(teams)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
