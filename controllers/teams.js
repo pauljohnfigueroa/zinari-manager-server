@@ -6,9 +6,9 @@ import Team from '../models/Team.js'
 export const createTeam = async (req, res) => {
 	try {
 		const { leader, name, description, members } = req.body
+
 		// get the _id of each member
 		const memberIds = members.map(item => item.split('|')[0])
-
 		const newTeam = new Team({
 			name,
 			description,
@@ -16,12 +16,12 @@ export const createTeam = async (req, res) => {
 			members: memberIds
 		})
 		const savedTeam = await newTeam.save()
-
 		const savedTeamId = savedTeam._id
 
+		/* Repeated code, do something. */
 		/* 
 		Fetch the last inserted team and make it conform to the format
- 		that matches the Team datagrid. 
+ 		that matches the Team datagrid's shape. 
 		*/
 		const savedTeamFormatted = await Team.aggregate([
 			{
@@ -85,7 +85,34 @@ export const updateTeam = async (req, res) => {
 		const team = await Team.findByIdAndUpdate({ _id: id }, { ...req.body, members: teamMemberIds })
 		if (!team) return res.status(400).json({ error: 'No such team.' })
 
-		res.status(200).json(team)
+		/* Repeated code, do something. */
+		/* 
+		Fetch the last updated team and make it conform to the format
+ 		that matches the Team datagrid's shape. 
+		*/
+		const updatedTeamFormatted = await Team.aggregate([
+			{
+				$match: { _id: new mongoose.Types.ObjectId(id) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			}
+		])
+
+		res.status(200).json(updatedTeamFormatted)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
