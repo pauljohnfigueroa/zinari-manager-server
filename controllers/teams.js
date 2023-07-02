@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 import Team from '../models/Team.js'
 // import User from '../models/User.js'
+import { utilGetUserTeams } from '../utils/db.teams.js'
 
 export const createTeam = async (req, res) => {
 	try {
@@ -18,32 +19,11 @@ export const createTeam = async (req, res) => {
 		const savedTeam = await newTeam.save()
 		const savedTeamId = savedTeam._id
 
-		/* Repeated code, do something. */
 		/* 
 		Fetch the last inserted team and make it conform to the format
  		that matches the Team datagrid's shape. 
 		*/
-		const savedTeamFormatted = await Team.aggregate([
-			{
-				$match: { _id: new mongoose.Types.ObjectId(savedTeamId) }
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'leader',
-					foreignField: '_id',
-					as: 'teamLeader'
-				}
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'members',
-					foreignField: '_id',
-					as: 'teamMembers'
-				}
-			}
-		])
+		const savedTeamFormatted = await utilGetUserTeams(Team, savedTeamId)
 
 		res.status(201).json(savedTeamFormatted)
 	} catch (error) {
@@ -90,27 +70,7 @@ export const updateTeam = async (req, res) => {
 		Fetch the last updated team and make it conform to the format
  		that matches the Team datagrid's shape. 
 		*/
-		const updatedTeamFormatted = await Team.aggregate([
-			{
-				$match: { _id: new mongoose.Types.ObjectId(id) }
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'leader',
-					foreignField: '_id',
-					as: 'teamLeader'
-				}
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'members',
-					foreignField: '_id',
-					as: 'teamMembers'
-				}
-			}
-		])
+		const updatedTeamFormatted = await utilGetUserTeams(Team, id)
 
 		res.status(200).json(updatedTeamFormatted)
 	} catch (error) {
