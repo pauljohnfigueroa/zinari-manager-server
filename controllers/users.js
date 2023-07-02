@@ -24,28 +24,15 @@ export const getUsers = async (req, res) => {
 	}
 }
 
-/* Get user's teams based on email. */
+/* Get logged in user's teams */
 export const getUserTeams = async (req, res) => {
 	try {
 		const { userId } = req.body
-		// const teams = await Team.find({
-		// 	leader: new mongoose.Types.ObjectId(userId)
-		// })
 
 		const teams = await Team.aggregate([
 			{
 				$match: { leader: new mongoose.Types.ObjectId(userId) }
 			},
-
-			// {
-			// 	$project: {
-			// 		firstName: 1,
-			// 		lastName: 1,
-			// 		members: 1,
-			// 		leader: 1,
-			// 		photo: 1
-			// 	}
-			// },
 			{
 				$lookup: {
 					from: 'users',
@@ -62,12 +49,6 @@ export const getUserTeams = async (req, res) => {
 					as: 'teamMembers'
 				}
 			}
-			// {
-			// 	$project: {
-			// 		teamLeader: { firstName: 1, lastName: 1 },
-			// 		teamMembers: { firstName: 1, lastName: 1, photo: 1 }
-			// 	}
-			// }
 		])
 		res.status(200).json(teams)
 	} catch (error) {
@@ -109,7 +90,7 @@ export const updateUser = async (req, res) => {
 	}
 }
 
-/* Update a user or multiple users */
+/* Delete a user or multiple users */
 export const deleteUser = async (req, res) => {
 	const { id } = req.params
 

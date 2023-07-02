@@ -17,7 +17,35 @@ export const createTeam = async (req, res) => {
 		})
 		const savedTeam = await newTeam.save()
 
-		res.status(201).json(savedTeam)
+		const savedTeamId = savedTeam._id
+
+		/* 
+		Fetch the last inserted team and make it conform to the format
+ 		that matches the Team datagrid. 
+		*/
+		const savedTeamFormatted = await Team.aggregate([
+			{
+				$match: { _id: new mongoose.Types.ObjectId(savedTeamId) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			}
+		])
+
+		res.status(201).json(savedTeamFormatted)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
