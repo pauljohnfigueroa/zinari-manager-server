@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 import Project from '../models/Project.js'
-// import User from '../models/User.js'
+import { utilGetUserProject } from '../utils/db.projects.js'
 
 export const createProject = async (req, res) => {
 	try {
@@ -20,33 +20,34 @@ export const createProject = async (req, res) => {
 		const savedProject = await newProject.save()
 
 		/* return the aggregated new project  */
-		const project = await Project.aggregate([
-			{
-				$match: { _id: new mongoose.Types.ObjectId(savedProject._id) }
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'manager',
-					foreignField: '_id',
-					as: 'projManager'
-				}
-			},
-			{
-				$lookup: {
-					from: 'teams',
-					localField: 'teams',
-					foreignField: '_id',
-					as: 'projTeams'
-				}
-			},
-			{
-				$project: {
-					teams: 0,
-					manager: 0
-				}
-			}
-		])
+		const project = await utilGetUserProject(Project, savedProject._id)
+		// const project = await Project.aggregate([
+		// 	{
+		// 		$match: { _id: new mongoose.Types.ObjectId(savedProject._id) }
+		// 	},
+		// 	{
+		// 		$lookup: {
+		// 			from: 'users',
+		// 			localField: 'manager',
+		// 			foreignField: '_id',
+		// 			as: 'projManager'
+		// 		}
+		// 	},
+		// 	{
+		// 		$lookup: {
+		// 			from: 'teams',
+		// 			localField: 'teams',
+		// 			foreignField: '_id',
+		// 			as: 'projTeams'
+		// 		}
+		// 	},
+		// 	{
+		// 		$project: {
+		// 			teams: 0,
+		// 			manager: 0
+		// 		}
+		// 	}
+		// ])
 		res.status(201).json(project)
 	} catch (error) {
 		res.status(500).json({ error: error.mesages })
@@ -81,9 +82,45 @@ export const updateProject = async (req, res) => {
 			return res.status(404).json({ error: 'No such ID.' })
 		}
 
-		const project = await Project.findByIdAndUpdate({ _id: id }, { ...req.body })
-		if (!project) return res.status(400).json({ error: 'No such project.' })
+		const { projTeams } = req.body
+		const projTeamIds = projTeams.map(team => team.split('|')[0])
 
+		const updatedProject = await Project.findByIdAndUpdate(
+			{ _id: id },
+			{ ...req.body, teams: projTeamIds }
+		)
+		if (!updatedProject) return res.status(400).json({ error: 'No such project.' })
+
+		/* return the aggregated new project  */
+		const project = await utilGetUserProject(Project, updatedProject._id)
+		// const project = await Project.aggregate([
+		// 	{
+		// 		$match: { _id: new mongoose.Types.ObjectId(updatedProject._id) }
+		// 	},
+		// 	{
+		// 		$lookup: {
+		// 			from: 'users',
+		// 			localField: 'manager',
+		// 			foreignField: '_id',
+		// 			as: 'projManager'
+		// 		}
+		// 	},
+		// 	{
+		// 		$lookup: {
+		// 			from: 'teams',
+		// 			localField: 'teams',
+		// 			foreignField: '_id',
+		// 			as: 'projTeams'
+		// 		}
+		// 	},
+		// 	{
+		// 		$project: {
+		// 			teams: 0,
+		// 			manager: 0
+		// 		}
+		// 	}
+		// ])
+		console.log('project', project)
 		res.status(200).json(project)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
