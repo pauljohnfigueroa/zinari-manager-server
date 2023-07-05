@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 	A utility function to fetch the last inserted/updated team and 
 	make it conform to the format that matches the Team datagrid's shape. 
 */
-export const utilGetUserTeams = async (Model, id) => {
+export const utilGetUserTeam = async (Model, id) => {
 	try {
 		const response = await Model.aggregate([
 			{

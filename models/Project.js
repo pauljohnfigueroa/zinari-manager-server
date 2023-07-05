@@ -11,18 +11,18 @@ const ProjectSchema = new mongoose.Schema(
 			type: String,
 			max: 200
 		},
-		teams: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Team'
-			}
-		],
-		tasks: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Team'
-			}
-		],
+		// teams: [
+		// 	{
+		// 		type: mongoose.Schema.Types.ObjectId,
+		// 		ref: 'Team'
+		// 	}
+		// ],
+		// tasks: [
+		// 	{
+		// 		type: mongoose.Schema.Types.ObjectId,
+		// 		ref: 'Team'
+		// 	}
+		// ],
 		manager: String,
 		dueDate: String
 	},

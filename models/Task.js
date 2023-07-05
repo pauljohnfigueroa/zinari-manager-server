@@ -4,6 +4,7 @@ const TaskSchema = new mongoose.Schema(
 	{
 		title: {
 			type: String,
+			required: true,
 			max: 100
 		},
 		description: {
@@ -12,11 +13,18 @@ const TaskSchema = new mongoose.Schema(
 		},
 		comments: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Comment'
+				comment: {
+					type: String,
+					required: true
+				},
+				user: {
+					type: Array,
+					required: true,
+					ref: 'User'
+				}
 			}
 		],
-		team: mongoose.Schema.Types.ObjectId,
+		project: mongoose.Schema.Types.ObjectId,
 		owner: mongoose.Schema.Types.ObjectId,
 		priority: String,
 		perspective: String,

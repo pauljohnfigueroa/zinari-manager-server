@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
 
 import Team from '../models/Team.js'
-// import User from '../models/User.js'
-import { utilGetUserTeams } from '../utils/db.teams.js'
+import { utilGetUserTeam } from '../utils/db.teams.js'
 
 export const createTeam = async (req, res) => {
 	try {
@@ -23,7 +22,7 @@ export const createTeam = async (req, res) => {
 		Fetch the last inserted team and make it conform to the format
  		that matches the Team datagrid's shape. 
 		*/
-		const savedTeamFormatted = await utilGetUserTeams(Team, savedTeamId)
+		const savedTeamFormatted = await utilGetUserTeam(Team, savedTeamId)
 
 		res.status(201).json(savedTeamFormatted)
 	} catch (error) {
@@ -41,6 +40,7 @@ export const getTeam = async (req, res) => {
 	}
 }
 
+/* Get teams */
 export const getTeams = async (req, res) => {
 	try {
 		const teams = await Team.find()
@@ -50,6 +50,7 @@ export const getTeams = async (req, res) => {
 	}
 }
 
+/* Update Team */
 export const updateTeam = async (req, res) => {
 	const { id } = req.params
 
@@ -70,7 +71,7 @@ export const updateTeam = async (req, res) => {
 		Fetch the last updated team and make it conform to the format
  		that matches the Team datagrid's shape. 
 		*/
-		const updatedTeamFormatted = await utilGetUserTeams(Team, id)
+		const updatedTeamFormatted = await utilGetUserTeam(Team, id)
 
 		res.status(200).json(updatedTeamFormatted)
 	} catch (error) {
