@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const ProjectSchema = new mongoose.Schema(
 	{
-		name: {
+		title: {
 			type: String,
 			required: true,
 			max: 50
@@ -11,19 +11,16 @@ const ProjectSchema = new mongoose.Schema(
 			type: String,
 			max: 200
 		},
-		// teams: [
-		// 	{
-		// 		type: mongoose.Schema.Types.ObjectId,
-		// 		ref: 'Team'
-		// 	}
-		// ],
-		// tasks: [
-		// 	{
-		// 		type: mongoose.Schema.Types.ObjectId,
-		// 		ref: 'Team'
-		// 	}
-		// ],
-		manager: String,
+		teams: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Team'
+			}
+		],
+		manager: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User'
+		},
 		dueDate: String
 	},
 	{

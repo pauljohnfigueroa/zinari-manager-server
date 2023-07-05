@@ -5,19 +5,22 @@ import Project from '../models/Project.js'
 
 export const createProject = async (req, res) => {
 	try {
-		const { email, name, description, dueDate, teams, tasks } = req.body
-		// extract the _id
-		const teamIds = teams.map(item => item[0])
+		const { manager, title, description, dueDate, teams } = req.body
+		// extract the team _id's
+		const teamIds = teams.map(item => item.split('|')[0])
 
 		const newProject = new Project({
-			name,
+			title,
 			description,
-			manager: email,
-			dueDate,
 			teams: teamIds,
-			tasks
+			manager,
+			dueDate
 		})
+
+		console.log('newProject', newProject)
+
 		const savedProject = await newProject.save()
+		console.log('newProject', savedProject)
 
 		res.status(201).json(savedProject)
 	} catch (error) {
