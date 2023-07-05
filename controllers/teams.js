@@ -96,3 +96,36 @@ export const deleteTeam = async (req, res) => {
 		res.status(500).json({ error: error.message })
 	}
 }
+
+/* Get logged in user's teams */
+export const getUserTeams = async (req, res) => {
+	try {
+		const { userId } = req.body
+
+		const teams = await Team.aggregate([
+			{
+				$match: { leader: new mongoose.Types.ObjectId(userId) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			}
+		])
+
+		res.status(200).json(teams)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}

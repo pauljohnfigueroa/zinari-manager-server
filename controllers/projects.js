@@ -17,12 +17,37 @@ export const createProject = async (req, res) => {
 			dueDate
 		})
 
-		console.log('newProject', newProject)
-
 		const savedProject = await newProject.save()
-		console.log('newProject', savedProject)
 
-		res.status(201).json(savedProject)
+		/* return the aggregated new project  */
+		const project = await Project.aggregate([
+			{
+				$match: { _id: new mongoose.Types.ObjectId(savedProject._id) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'manager',
+					foreignField: '_id',
+					as: 'projManager'
+				}
+			},
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'teams',
+					foreignField: '_id',
+					as: 'projTeams'
+				}
+			},
+			{
+				$project: {
+					teams: 0,
+					manager: 0
+				}
+			}
+		])
+		res.status(201).json(project)
 	} catch (error) {
 		res.status(500).json({ error: error.mesages })
 	}

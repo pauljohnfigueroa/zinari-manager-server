@@ -3,7 +3,14 @@ import express from 'express'
 const router = express.Router()
 
 // import controller functions
-import { getUser, getUsers, getUserTeams, updateUser, deleteUser } from '../controllers/users.js'
+import {
+	getUser,
+	getUsers,
+	getUserTeams,
+	getUserProjects,
+	updateUser,
+	deleteUser
+} from '../controllers/users.js'
 
 import { verifyToken } from '../middleware/auth.js'
 
@@ -11,7 +18,7 @@ import { verifyToken } from '../middleware/auth.js'
 router.get('/:id', verifyToken, getUser)
 router.get('/', verifyToken, getUsers)
 router.post('/teams', verifyToken, getUserTeams)
-
+router.post('/projects', verifyToken, getUserProjects)
 /* Update Routes */
 router.patch('/:id', verifyToken, updateUser)
 

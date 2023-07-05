@@ -2,6 +2,7 @@
 import mongoose from 'mongoose'
 import User from '../models/User.js'
 import Team from '../models/Team.js'
+import Project from '../models/Project.js'
 
 /* Get a single user from the database using the id parameter. */
 export const getUser = async (req, res) => {
@@ -19,39 +20,6 @@ export const getUsers = async (req, res) => {
 	try {
 		const users = await User.find().select({ password: 0 })
 		res.status(200).json(users)
-	} catch (error) {
-		res.status(500).json({ error: error.message })
-	}
-}
-
-/* Get logged in user's teams */
-export const getUserTeams = async (req, res) => {
-	try {
-		const { userId } = req.body
-
-		const teams = await Team.aggregate([
-			{
-				$match: { leader: new mongoose.Types.ObjectId(userId) }
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'leader',
-					foreignField: '_id',
-					as: 'teamLeader'
-				}
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'members',
-					foreignField: '_id',
-					as: 'teamMembers'
-				}
-			}
-		])
-
-		res.status(200).json(teams)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
@@ -103,6 +71,78 @@ export const deleteUser = async (req, res) => {
 		if (!user) return res.status(400).json({ error: 'User does not exist.' })
 
 		res.status(200).json(user)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
+/* Get logged in user's teams */
+export const getUserTeams = async (req, res) => {
+	try {
+		const { userId } = req.body
+
+		const teams = await Team.aggregate([
+			{
+				$match: { leader: new mongoose.Types.ObjectId(userId) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			}
+		])
+
+		res.status(200).json(teams)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
+/* Get logged in user's projects */
+export const getUserProjects = async (req, res) => {
+	try {
+		const { userId } = req.body
+
+		const projects = await Project.aggregate([
+			{
+				$match: { manager: new mongoose.Types.ObjectId(userId) }
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'manager',
+					foreignField: '_id',
+					as: 'projManager'
+				}
+			},
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'teams',
+					foreignField: '_id',
+					as: 'projTeams'
+				}
+			},
+			{
+				$project: {
+					teams: 0,
+					manager: 0
+				}
+			}
+		])
+
+		res.status(200).json(projects)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
