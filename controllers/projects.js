@@ -6,7 +6,7 @@ import { utilGetUserProject } from '../utils/db.projects.js'
 export const createProject = async (req, res) => {
 	try {
 		const { manager, title, description, dueDate, teams } = req.body
-		// extract the team _id's
+		// extract the project _id's
 		const teamIds = teams.map(item => item.split('|')[0])
 
 		const newProject = new Project({
@@ -21,33 +21,7 @@ export const createProject = async (req, res) => {
 
 		/* return the aggregated new project  */
 		const project = await utilGetUserProject(Project, savedProject._id)
-		// const project = await Project.aggregate([
-		// 	{
-		// 		$match: { _id: new mongoose.Types.ObjectId(savedProject._id) }
-		// 	},
-		// 	{
-		// 		$lookup: {
-		// 			from: 'users',
-		// 			localField: 'manager',
-		// 			foreignField: '_id',
-		// 			as: 'projManager'
-		// 		}
-		// 	},
-		// 	{
-		// 		$lookup: {
-		// 			from: 'teams',
-		// 			localField: 'teams',
-		// 			foreignField: '_id',
-		// 			as: 'projTeams'
-		// 		}
-		// 	},
-		// 	{
-		// 		$project: {
-		// 			teams: 0,
-		// 			manager: 0
-		// 		}
-		// 	}
-		// ])
+
 		res.status(201).json(project)
 	} catch (error) {
 		res.status(500).json({ error: error.mesages })
@@ -93,33 +67,7 @@ export const updateProject = async (req, res) => {
 
 		/* return the aggregated new project  */
 		const project = await utilGetUserProject(Project, updatedProject._id)
-		// const project = await Project.aggregate([
-		// 	{
-		// 		$match: { _id: new mongoose.Types.ObjectId(updatedProject._id) }
-		// 	},
-		// 	{
-		// 		$lookup: {
-		// 			from: 'users',
-		// 			localField: 'manager',
-		// 			foreignField: '_id',
-		// 			as: 'projManager'
-		// 		}
-		// 	},
-		// 	{
-		// 		$lookup: {
-		// 			from: 'teams',
-		// 			localField: 'teams',
-		// 			foreignField: '_id',
-		// 			as: 'projTeams'
-		// 		}
-		// 	},
-		// 	{
-		// 		$project: {
-		// 			teams: 0,
-		// 			manager: 0
-		// 		}
-		// 	}
-		// ])
+
 		console.log('project', project)
 		res.status(200).json(project)
 	} catch (error) {
