@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 
 import Project from '../models/Project.js'
+import Team from '../models/Team.js'
+
 import { utilGetUserProject } from '../utils/db.projects.js'
 
 export const createProject = async (req, res) => {
@@ -42,6 +44,66 @@ export const getProjects = async (req, res) => {
 	try {
 		const projects = await Project.find()
 		res.status(200).json(projects)
+	} catch (error) {
+		res.status(500).json({ error: error.mesages })
+	}
+}
+
+export const getProjectTeams = async (req, res) => {
+	const { projId } = req.params
+	try {
+		const projTeams = await Project.aggregate([
+			{ $match: { _id: { $in: [new mongoose.Types.ObjectId(projId)] } } },
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'teams',
+					foreignField: '_id',
+					as: 'projTeams'
+				}
+			}
+		])
+		//console.log(projTeams)
+		res.status(200).json(projTeams)
+	} catch (error) {
+		res.status(500).json({ error: error.mesages })
+	}
+}
+
+export const getProjectTeamMembers = async (req, res) => {
+	const { teams } = req.body
+	const teamIds = teams.map(team => new mongoose.Types.ObjectId(team._id))
+	console.log('teamIds', teamIds)
+	try {
+		const teamMembers = await Team.aggregate([
+			{
+				$match: {
+					_id: {
+						$in: teamIds
+					}
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'members',
+					foreignField: '_id',
+					as: 'teamMembers'
+				}
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'leader',
+					foreignField: '_id',
+					as: 'teamLeader'
+				}
+			}
+		])
+
+		// console.log('teamMembers', teamMembers)
+
+		res.status(200).json(teamMembers)
 	} catch (error) {
 		res.status(500).json({ error: error.mesages })
 	}
