@@ -9,18 +9,24 @@ import User from '../models/User.js'
 export const createTask = async (req, res) => {
 	try {
 		// coming from the add task user form in the front end
-		const { userId, title, description, team, priority, perspective, dueDate } = req.body
+		const { title, description, project, team, owner, priority, perspective, dueDate } = req.body
 
+		console.log(title)
+
+		console.log('owner', owner)
+		const ownerId = owner.split('|')[0]
 		const newTask = new Task({
-			owner: userId,
 			title,
 			description,
+			comments: [],
+			project,
 			team,
+			owner: ownerId,
 			priority,
 			perspective,
+			status: 'new',
 			dueDate
 		})
-
 		// save new task
 		const savedTask = await newTask.save()
 
@@ -58,6 +64,19 @@ export const getTasks = async (req, res) => {
 		const task = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
 		// send task data to front-end
 		res.status(200).json(task)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
+export const getTeamTasks = async (req, res) => {
+	try {
+		const { teamId } = req.params
+		// find tasks with owner of userId
+		const tasks = await Task.find({ team: new mongoose.Types.ObjectId(teamId) })
+		// send task data to front-end
+		console.log(tasks)
+		res.status(200).json(tasks)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}

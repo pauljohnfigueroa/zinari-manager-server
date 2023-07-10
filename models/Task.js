@@ -9,22 +9,21 @@ const TaskSchema = new mongoose.Schema(
 		},
 		description: {
 			type: String,
-			max: 200
+			max: 500
 		},
 		comments: [
 			{
 				comment: {
-					type: String,
-					required: true
+					type: String
 				},
 				user: {
 					type: Array,
-					required: true,
 					ref: 'User'
 				}
 			}
 		],
 		project: mongoose.Schema.Types.ObjectId,
+		team: mongoose.Schema.Types.ObjectId,
 		owner: mongoose.Schema.Types.ObjectId,
 		priority: String,
 		perspective: String,

@@ -53,7 +53,7 @@ export const getProjectTeams = async (req, res) => {
 	const { projId } = req.params
 	try {
 		const projTeams = await Project.aggregate([
-			{ $match: { _id: { $in: [new mongoose.Types.ObjectId(projId)] } } },
+			{ $match: { _id: new mongoose.Types.ObjectId(projId) } },
 			{
 				$lookup: {
 					from: 'teams',
@@ -73,7 +73,8 @@ export const getProjectTeams = async (req, res) => {
 export const getProjectTeamMembers = async (req, res) => {
 	const { teams } = req.body
 	const teamIds = teams.map(team => new mongoose.Types.ObjectId(team._id))
-	console.log('teamIds', teamIds)
+	// console.log('teamIds', teamIds)
+
 	try {
 		const teamMembers = await Team.aggregate([
 			{
