@@ -11,9 +11,6 @@ export const createTask = async (req, res) => {
 		// coming from the add task user form in the front end
 		const { title, description, project, team, owner, priority, perspective, dueDate } = req.body
 
-		console.log(title)
-
-		console.log('owner', owner)
 		const ownerId = owner.split('|')[0]
 		const newTask = new Task({
 			title,
@@ -57,13 +54,13 @@ export const getTask = async (req, res) => {
 	}
 }
 
-export const getTasks = async (req, res) => {
+export const getUserTasks = async (req, res) => {
 	try {
 		const { userId } = req.body
 		// find tasks with owner of userId
-		const task = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
+		const tasks = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
 		// send task data to front-end
-		res.status(200).json(task)
+		res.status(200).json(tasks)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
@@ -115,5 +112,25 @@ export const deleteTask = async (req, res) => {
 		res.status(200).json(task)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
+	}
+}
+
+export const createComment = async (req, res) => {
+	try {
+		const { taskId, userId, comment } = req.body
+		console.log(taskId, userId, comment)
+		const newComment = await Task.updateOne(
+			{ _id: new mongoose.Types.ObjectId(taskId) },
+			{
+				$currentDate: { lastModified: true },
+				$push: { comments: { comment, user: userId } }
+			}
+		)
+
+		console.log('newComment', newComment)
+
+		res.status(200).json(newComment)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
 	}
 }

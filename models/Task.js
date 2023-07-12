@@ -17,8 +17,11 @@ const TaskSchema = new mongoose.Schema(
 					type: String
 				},
 				user: {
-					type: Array,
+					type: mongoose.Schema.Types.ObjectId,
 					ref: 'User'
+				},
+				lastModified: {
+					type: String
 				}
 			}
 		],

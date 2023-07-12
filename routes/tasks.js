@@ -5,10 +5,11 @@ const router = express.Router()
 import {
 	createTask,
 	getTask,
-	getTasks,
+	getUserTasks,
 	getTeamTasks,
 	updateTask,
-	deleteTask
+	deleteTask,
+	createComment
 } from '../controllers/tasks.js'
 
 import { verifyToken } from '../middleware/auth.js'
@@ -16,8 +17,9 @@ import { verifyToken } from '../middleware/auth.js'
 /* Read Routes */
 router.get('/:id', verifyToken, getTask)
 router.post('/', verifyToken, createTask)
-router.post('/user', verifyToken, getTasks)
+router.post('/user', verifyToken, getUserTasks)
 router.get('/:teamId/tasks', verifyToken, getTeamTasks)
+router.post('/comment', verifyToken, createComment)
 
 /* Update Routes */
 router.patch('/:id', verifyToken, updateTask)
