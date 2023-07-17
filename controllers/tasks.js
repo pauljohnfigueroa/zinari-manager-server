@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import Task from '../models/Task.js'
-import User from '../models/User.js'
 
 /* 
     April 7, 2023
@@ -68,9 +67,12 @@ export const getUserTasks = async (req, res) => {
 
 export const getTeamTasks = async (req, res) => {
 	try {
-		const { teamId } = req.params
-		// find tasks with owner of userId
-		const tasks = await Task.find({ team: new mongoose.Types.ObjectId(teamId) })
+		const { projectId, teamId } = req.params
+		// find tasks based on project and team
+		const tasks = await Task.find({
+			project: new mongoose.Types.ObjectId(projectId),
+			team: new mongoose.Types.ObjectId(teamId)
+		})
 		// send task data to front-end
 		console.log(tasks)
 		res.status(200).json(tasks)
@@ -127,10 +129,23 @@ export const createComment = async (req, res) => {
 			}
 		)
 
-		console.log('newComment', newComment)
+		// console.log('newComment', newComment)
 
 		res.status(200).json(newComment)
 	} catch (error) {
-		res.status(500).json({ message: error.message })
+		res.status(500).json({ error: error.message })
+	}
+}
+
+export async function getTaskComments(req, res) {
+	try {
+		const { taskId } = req.params
+		// find tasks with owner of userId
+		const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
+		// send task data to front-end
+		console.log(task[0].comments)
+		res.status(200).json(task[0].comments)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
 	}
 }

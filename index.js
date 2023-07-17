@@ -43,12 +43,12 @@ app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* File upload */
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/assets')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
+	destination: function (req, file, cb) {
+		cb(null, 'public/assets')
+	},
+	filename: function (req, file, cb) {
+		cb(null, file.originalname)
+	}
 })
 const upload = multer({ storage })
 
@@ -67,16 +67,16 @@ app.use('/roles', roleRoutes)
 const PORT = process.env.PORT || 4001
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('SUCCESS - We are connected to the database.')
-    app.listen(PORT, () => {
-      console.log(`SUCCESS - The server is listening on PORT ${PORT}`)
-    })
-  })
-  .catch(error => {
-    console.log(`${error}. Can not connect.`)
-  })
+	.connect(process.env.MONGO_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true
+	})
+	.then(() => {
+		console.log('SUCCESS - Database connected.')
+		app.listen(PORT, () => {
+			console.log(`SUCCESS - The server is listening on PORT ${PORT}`)
+		})
+	})
+	.catch(error => {
+		console.log(`${error}. Can not connect.`)
+	})

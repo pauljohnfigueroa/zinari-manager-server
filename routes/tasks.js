@@ -9,7 +9,8 @@ import {
 	getTeamTasks,
 	updateTask,
 	deleteTask,
-	createComment
+	createComment,
+	getTaskComments
 } from '../controllers/tasks.js'
 
 import { verifyToken } from '../middleware/auth.js'
@@ -18,8 +19,9 @@ import { verifyToken } from '../middleware/auth.js'
 router.get('/:id', verifyToken, getTask)
 router.post('/', verifyToken, createTask)
 router.post('/user', verifyToken, getUserTasks)
-router.get('/:teamId/tasks', verifyToken, getTeamTasks)
+router.get('/:projectId/:teamId/tasks', verifyToken, getTeamTasks)
 router.post('/comment', verifyToken, createComment)
+router.get('/:taskId/comments', verifyToken, getTaskComments)
 
 /* Update Routes */
 router.patch('/:id', verifyToken, updateTask)
