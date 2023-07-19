@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import Team from '../models/Team.js'
 import { utilGetUserTeam } from '../utils/db.teams.js'
 
-export const createTeam = async (req, res) => {
+export async function createTeam(req, res) {
 	try {
 		const { leader, name, description, members } = req.body
 
@@ -30,7 +30,7 @@ export const createTeam = async (req, res) => {
 	}
 }
 
-export const getTeam = async (req, res) => {
+export async function getTeam(req, res) {
 	try {
 		const { id } = req.params
 		const team = await Team.findById(id)
@@ -41,7 +41,7 @@ export const getTeam = async (req, res) => {
 }
 
 /* Get teams */
-export const getTeams = async (req, res) => {
+export async function getTeams(req, res) {
 	try {
 		const teams = await Team.find()
 		res.status(200).json(teams)
@@ -51,7 +51,7 @@ export const getTeams = async (req, res) => {
 }
 
 /* Update Team */
-export const updateTeam = async (req, res) => {
+export async function updateTeam(req, res) {
 	const { id } = req.params
 
 	try {
@@ -79,7 +79,7 @@ export const updateTeam = async (req, res) => {
 	}
 }
 
-export const deleteTeam = async (req, res) => {
+export async function deleteTeam(req, res) {
 	const { id } = req.params
 
 	try {

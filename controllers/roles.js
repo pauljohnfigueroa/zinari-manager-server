@@ -1,13 +1,12 @@
 import mongoose from 'mongoose'
 
 import Role from '../models/Role.js'
-// import User from '../models/User.js'
 
 /* 
     April 22, 2023
     Create a role.
 */
-export const createRole = async (req, res) => {
+export async function createRole(req, res) {
 	try {
 		// coming from the add role user form in the front end
 		const { createdBy, name, description, permissions } = req.body
@@ -29,10 +28,7 @@ export const createRole = async (req, res) => {
 	}
 }
 
-/* 
-    Get a single role from the database using the id parameter.
-*/
-export const getRole = async (req, res) => {
+export async function getRole(req, res) {
 	try {
 		// get the role's id from the parameters
 		const { name } = req.params
@@ -48,7 +44,7 @@ export const getRole = async (req, res) => {
 	}
 }
 
-export const getRoles = async (req, res) => {
+export async function getRoles(req, res) {
 	try {
 		// use the id to find the role and exclude the password
 		const role = await Role.find()
@@ -59,7 +55,7 @@ export const getRoles = async (req, res) => {
 	}
 }
 
-export const updateRole = async (req, res) => {
+export async function updateRole(req, res) {
 	const { id } = req.params
 
 	try {
@@ -77,7 +73,7 @@ export const updateRole = async (req, res) => {
 	}
 }
 
-export const deleteRole = async (req, res) => {
+export async function deleteRole(req, res) {
 	const { id } = req.params
 
 	try {

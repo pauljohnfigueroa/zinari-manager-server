@@ -5,7 +5,7 @@ import Team from '../models/Team.js'
 import Project from '../models/Project.js'
 
 /* Get a single user from the database using the id parameter. */
-export const getUser = async (req, res) => {
+export async function getUser(req, res) {
 	try {
 		const { id } = req.params
 		const user = await User.findById(id).select({ password: 0 })
@@ -16,7 +16,7 @@ export const getUser = async (req, res) => {
 }
 
 /* Get all users */
-export const getUsers = async (req, res) => {
+export async function getUsers(req, res) {
 	try {
 		const users = await User.find().select({ password: 0 })
 		res.status(200).json(users)
@@ -26,7 +26,7 @@ export const getUsers = async (req, res) => {
 }
 
 /* Update a user */
-export const updateUser = async (req, res) => {
+export async function updateUser(req, res) {
 	const { id } = req.params
 	const {
 		firstName,
@@ -60,7 +60,7 @@ export const updateUser = async (req, res) => {
 }
 
 /* Delete a user or multiple users */
-export const deleteUser = async (req, res) => {
+export async function deleteUser(req, res) {
 	const { id } = req.params
 
 	try {
@@ -77,7 +77,7 @@ export const deleteUser = async (req, res) => {
 }
 
 /* Get logged in user's teams */
-export const getUserTeams = async (req, res) => {
+export async function getUserTeams(req, res) {
 	try {
 		const { userId } = req.body
 
@@ -110,7 +110,7 @@ export const getUserTeams = async (req, res) => {
 }
 
 /* Get logged in user's projects */
-export const getUserProjects = async (req, res) => {
+export async function getUserProjects(req, res) {
 	try {
 		const { userId } = req.body
 

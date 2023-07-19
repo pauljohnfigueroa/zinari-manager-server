@@ -5,7 +5,7 @@ import Team from '../models/Team.js'
 
 import { utilGetUserProject } from '../utils/db.projects.js'
 
-export const createProject = async (req, res) => {
+export async function createProject(req, res) {
 	try {
 		const { manager, title, description, dueDate, teams } = req.body
 		// extract the project _id's
@@ -30,7 +30,7 @@ export const createProject = async (req, res) => {
 	}
 }
 
-export const getProject = async (req, res) => {
+export async function getProject(req, res) {
 	const { id } = req.params
 	try {
 		const project = await Project.findById(id)
@@ -40,7 +40,7 @@ export const getProject = async (req, res) => {
 	}
 }
 
-export const getProjects = async (req, res) => {
+export async function getProjects(req, res) {
 	try {
 		const projects = await Project.find()
 		res.status(200).json(projects)
@@ -49,7 +49,7 @@ export const getProjects = async (req, res) => {
 	}
 }
 
-export const getProjectTeams = async (req, res) => {
+export async function getProjectTeams(req, res) {
 	const { projId } = req.params
 	try {
 		const projTeams = await Project.aggregate([
@@ -70,7 +70,7 @@ export const getProjectTeams = async (req, res) => {
 	}
 }
 
-export const getProjectTeamMembers = async (req, res) => {
+export async function getProjectTeamMembers(req, res) {
 	const { teams } = req.body
 	const teamIds = teams.map(team => new mongoose.Types.ObjectId(team._id))
 	// console.log('teamIds', teamIds)
@@ -110,7 +110,7 @@ export const getProjectTeamMembers = async (req, res) => {
 	}
 }
 
-export const updateProject = async (req, res) => {
+export async function updateProject(req, res) {
 	const { id } = req.params
 
 	try {
@@ -138,7 +138,7 @@ export const updateProject = async (req, res) => {
 	}
 }
 
-export const deleteProject = async (req, res) => {
+export async function deleteProject(req, res) {
 	const { id } = req.params
 
 	try {

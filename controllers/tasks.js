@@ -5,7 +5,7 @@ import Task from '../models/Task.js'
     April 7, 2023
     Create a task.
 */
-export const createTask = async (req, res) => {
+export async function createTask(req, res) {
 	try {
 		// coming from the add task user form in the front end
 		const { title, description, project, team, owner, priority, perspective, dueDate } = req.body
@@ -37,7 +37,7 @@ export const createTask = async (req, res) => {
     April 7, 2023
     Get a single task from the database using the id parameter.
 */
-export const getTask = async (req, res) => {
+export async function getTask(req, res) {
 	try {
 		// get the task's id from the parameters
 		const { id } = req.params
@@ -53,7 +53,7 @@ export const getTask = async (req, res) => {
 	}
 }
 
-export const getUserTasks = async (req, res) => {
+export async function getUserTasks(req, res) {
 	try {
 		const { userId } = req.body
 		// find tasks with owner of userId
@@ -65,7 +65,7 @@ export const getUserTasks = async (req, res) => {
 	}
 }
 
-export const getTeamTasks = async (req, res) => {
+export async function getTeamTasks(req, res) {
 	try {
 		const { projectId, teamId } = req.params
 		// find tasks based on project and team
@@ -81,7 +81,7 @@ export const getTeamTasks = async (req, res) => {
 	}
 }
 
-export const updateTask = async (req, res) => {
+export async function updateTask(req, res) {
 	const { id } = req.params
 
 	try {
@@ -99,7 +99,7 @@ export const updateTask = async (req, res) => {
 	}
 }
 
-export const deleteTask = async (req, res) => {
+export async function deleteTask(req, res) {
 	const { id } = req.params
 
 	try {
@@ -117,20 +117,20 @@ export const deleteTask = async (req, res) => {
 	}
 }
 
-export const createComment = async (req, res) => {
+export async function createComment(req, res) {
 	try {
 		const { taskId, userId, comment } = req.body
-		console.log(taskId, userId, comment)
+
+		let dateObj = new Date()
+		console.log('dateObj', dateObj)
+
 		const newComment = await Task.updateOne(
 			{ _id: new mongoose.Types.ObjectId(taskId) },
 			{
 				$currentDate: { lastModified: true },
-				$push: { comments: { comment, user: userId } }
+				$push: { comments: { comment, user: userId, lastModified: dateObj } }
 			}
 		)
-
-		// console.log('newComment', newComment)
-
 		res.status(200).json(newComment)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
