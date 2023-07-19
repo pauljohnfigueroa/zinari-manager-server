@@ -131,7 +131,13 @@ export async function createComment(req, res) {
 				$push: { comments: { comment, user: userId, lastModified: dateObj } }
 			}
 		)
-		res.status(200).json(newComment)
+		// let's do aggregates here to get the user's full name
+		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
+		const task = await Task.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(taskId) } }])
+
+		console.log('task', task[0].comments)
+
+		res.status(200).json(task[0].comments)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
@@ -143,7 +149,7 @@ export async function getTaskComments(req, res) {
 		// find tasks with owner of userId
 		const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
 		// send task data to front-end
-		console.log(task[0].comments)
+		// console.log(task[0].comments)
 		res.status(200).json(task[0].comments)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
