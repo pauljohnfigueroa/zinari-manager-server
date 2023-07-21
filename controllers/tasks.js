@@ -131,23 +131,13 @@ export async function createComment(req, res) {
 				$push: { comments: { comment, user: userId, lastModified: dateObj } }
 			}
 		)
+
 		// let's do aggregates here to get the user's full name
 		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
-		const task = await Task.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(taskId) } }])
+		// const task = await Task.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(taskId) } }])
 
-		console.log('task', task[0].comments)
-
-		res.status(200).json(task[0].comments)
-	} catch (error) {
-		res.status(500).json({ error: error.message })
-	}
-}
-
-export async function getTaskComments(req, res) {
-	try {
-		const { taskId } = req.params
-		// find tasks with owner of userId
-		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
+		// this is sub-optimal, find another way
+		// see page 44 of the Practical MongoDB aggregations
 		const task = await Task.aggregate([
 			{
 				$match: { _id: new mongoose.Types.ObjectId(taskId) }
@@ -174,6 +164,58 @@ export async function getTaskComments(req, res) {
 							lastModified: '$comments.lastModified',
 							comment: '$comments.comment',
 							user: '$commentOwner.firstName',
+							photo: '$commentOwner.photo',
+							_id: '$comments._id'
+						}
+					}
+				}
+			}
+		])
+
+		console.log('task[0].comments', task[0].comments)
+		res.status(200).json(task[0].comments)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
+export async function getTaskComments(req, res) {
+	try {
+		const { taskId } = req.params
+		// find tasks with owner of userId
+		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
+		const task = await Task.aggregate([
+			{
+				$match: {
+					_id: new mongoose.Types.ObjectId(taskId)
+				}
+			},
+
+			{
+				$unwind: '$comments'
+			},
+
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'comments.user',
+					foreignField: '_id',
+					as: 'commentOwner'
+				}
+			},
+
+			{
+				$unwind: '$commentOwner'
+			},
+
+			{
+				$group: {
+					_id: '$_id',
+					comments: {
+						$push: {
+							lastModified: '$comments.lastModified',
+							comment: '$comments.comment',
+							user: '$commentOwner.firstName',
 							photo: '$commentOwner.photo'
 						}
 					}
@@ -182,7 +224,7 @@ export async function getTaskComments(req, res) {
 		])
 
 		// send task data to front-end
-		// console.log('task[0].comments', task[0].comments)
+		console.log('task[0].comments', task[0].comments)
 		res.status(200).json(task[0].comments)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
