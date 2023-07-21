@@ -77,9 +77,11 @@ export async function getTeamMembers(req, res) {
 					_id: '$_id',
 					members: {
 						$push: {
+							_id: '$membersNames._id',
 							firstName: '$membersNames.firstName',
 							lastName: '$membersNames.lastName',
-							extName: '$membersNames.extName'
+							extName: '$membersNames.extName',
+							photo: '$membersNames.photo'
 						}
 					}
 				}
