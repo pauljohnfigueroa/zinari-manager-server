@@ -122,22 +122,17 @@ export async function createComment(req, res) {
 		const { taskId, userId, comment } = req.body
 
 		let dateObj = new Date()
-		console.log('dateObj', dateObj)
 
+		// Create the comment
 		const newComment = await Task.updateOne(
 			{ _id: new mongoose.Types.ObjectId(taskId) },
 			{
-				// $currentDate: { lastModified: true },
+				$currentDate: { lastModified: true },
 				$push: { comments: { comment, user: userId, lastModified: dateObj.toISOString() } }
 			}
 		)
-		console.log('newComment', newComment)
-		// let's do aggregates here to get the user's full name
-		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
-		// const task = await Task.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(taskId) } }])
 
-		// this is sub-optimal, find another way
-		// see page 44 of the Practical MongoDB aggregations
+		// let's do aggregates here to get the user's full name
 		const task = await Task.aggregate([
 			{
 				$match: { _id: new mongoose.Types.ObjectId(taskId) }
@@ -146,6 +141,7 @@ export async function createComment(req, res) {
 				$unwind: '$comments'
 			},
 			{
+				// We want to return only the latest comment to the frontend after creation.
 				$match: { 'comments.lastModified': { $gte: dateObj.toISOString() } }
 			},
 			{
@@ -164,11 +160,11 @@ export async function createComment(req, res) {
 					_id: '$_id',
 					comments: {
 						$push: {
+							_id: '$comments._id',
 							lastModified: '$comments.lastModified',
 							comment: '$comments.comment',
-							user: '$commentOwner.firstName',
-							photo: '$commentOwner.photo',
-							_id: '$comments._id'
+							user: '$commentOwner.firstName', // how to generate the full name
+							photo: '$commentOwner.photo'
 						}
 					}
 				}
@@ -216,6 +212,7 @@ export async function getTaskComments(req, res) {
 					_id: '$_id',
 					comments: {
 						$push: {
+							_id: '$comments._id',
 							lastModified: '$comments.lastModified',
 							comment: '$comments.comment',
 							user: '$commentOwner.firstName',
