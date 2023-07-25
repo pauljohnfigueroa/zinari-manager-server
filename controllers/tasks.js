@@ -66,6 +66,19 @@ export async function getUserTasks(req, res) {
 			},
 			{
 				$lookup: {
+					from: 'users',
+					localField: 'owner',
+					foreignField: '_id',
+					as: 'ownerDetails'
+				}
+			},
+			{
+				$unwind: {
+					path: '$ownerDetails'
+				}
+			},
+			{
+				$lookup: {
 					from: 'projects',
 					localField: 'project',
 					foreignField: '_id',
@@ -91,16 +104,27 @@ export async function getUserTasks(req, res) {
 				}
 			},
 			{
+				$set: {
+					fname: '$ownerDetails.firstName',
+					lname: '$ownerDetails.lastName',
+					project: '$projectDetails.title',
+					team: '$teamDetails.name'
+				}
+			},
+			{
 				$project: {
 					_id: 1,
 					title: 1,
+					owner: {
+						$concat: ['$fname', ' ', '$lname']
+					},
 					description: 1,
 					perspective: 1,
 					priority: 1,
 					status: 1,
 					dueDate: 1,
-					projectDetails: 1,
-					teamDetails: 1
+					project: 1,
+					team: 1
 				}
 			}
 		])
