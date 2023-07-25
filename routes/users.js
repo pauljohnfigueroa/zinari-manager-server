@@ -18,7 +18,7 @@ import { verifyToken } from '../middleware/auth.js'
 router.get('/:id', verifyToken, getUser)
 router.get('/', verifyToken, getUsers)
 router.post('/teams', verifyToken, getUserTeams)
-router.post('/projects', verifyToken, getUserProjects)
+router.post('/projects', verifyToken, getUserProjects) // change path to /
 /* Update Routes */
 router.patch('/:id', verifyToken, updateUser)
 

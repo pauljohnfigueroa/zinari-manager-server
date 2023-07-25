@@ -57,8 +57,56 @@ export async function getUserTasks(req, res) {
 	try {
 		const { userId } = req.body
 		// find tasks with owner of userId
-		const tasks = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
+		// const tasks = await Task.find({ owner: new mongoose.Types.ObjectId(userId) })
+		const tasks = await Task.aggregate([
+			{
+				$match: {
+					owner: new mongoose.Types.ObjectId(userId)
+				}
+			},
+			{
+				$lookup: {
+					from: 'projects',
+					localField: 'project',
+					foreignField: '_id',
+					as: 'projectDetails'
+				}
+			},
+			{
+				$unwind: {
+					path: '$projectDetails'
+				}
+			},
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'team',
+					foreignField: '_id',
+					as: 'teamDetails'
+				}
+			},
+			{
+				$unwind: {
+					path: '$teamDetails'
+				}
+			},
+			{
+				$project: {
+					_id: 1,
+					title: 1,
+					description: 1,
+					perspective: 1,
+					priority: 1,
+					status: 1,
+					dueDate: 1,
+					projectDetails: 1,
+					teamDetails: 1
+				}
+			}
+		])
+
 		// send task data to front-end
+		console.log("user's tasks", tasks)
 		res.status(200).json(tasks)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
@@ -74,7 +122,7 @@ export async function getTeamTasks(req, res) {
 			team: new mongoose.Types.ObjectId(teamId)
 		})
 		// send task data to front-end
-		console.log(tasks)
+		console.log('tasks', tasks)
 		res.status(200).json(tasks)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
@@ -181,8 +229,6 @@ export async function createComment(req, res) {
 export async function getTaskComments(req, res) {
 	try {
 		const { taskId } = req.params
-		// find tasks with owner of userId
-		// const task = await Task.find({ _id: new mongoose.Types.ObjectId(taskId) })
 		const task = await Task.aggregate([
 			{
 				$match: {
@@ -226,6 +272,60 @@ export async function getTaskComments(req, res) {
 		// send task data to front-end
 		console.log('task[0].comments', task[0].comments)
 		res.status(200).json(task[0].comments)
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
+export async function getTaskDetails(req, res) {
+	try {
+		const { taskId, teamId } = req.params
+
+		const task = await Task.aggregate([
+			{
+				$match: {
+					_id: new mongoose.Types.ObjectId(taskId),
+					team: new mongoose.Types.ObjectId(teamId)
+				}
+			},
+			{
+				$lookup: {
+					from: 'projects',
+					localField: 'project',
+					foreignField: '_id',
+					as: 'projectDetails'
+				}
+			},
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'team',
+					foreignField: '_id',
+					as: 'teamDetails'
+				}
+			},
+			{
+				$group: {
+					_id: '$_id',
+					team: {
+						$push: {
+							_id: '$teamDetails._id',
+							name: '$teamDetails.name'
+						}
+					},
+					project: {
+						$push: {
+							_id: '$projectDetails._id',
+							title: '$projectDetails.title'
+						}
+					}
+				}
+			}
+		])
+
+		// send task data to front-end
+		console.log('task[0]', task)
+		res.status(200).json(task)
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
