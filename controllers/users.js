@@ -79,11 +79,16 @@ export async function deleteUser(req, res) {
 /* Get logged in user's teams */
 export async function getUserTeams(req, res) {
 	try {
-		const { userId } = req.body
+		const { userId } = req.params
 
 		const teams = await Team.aggregate([
 			{
-				$match: { leader: new mongoose.Types.ObjectId(userId) }
+				$match: {
+					$or: [
+						{ leader: new mongoose.Types.ObjectId(userId) },
+						{ members: { $in: [new mongoose.Types.ObjectId(userId)] } }
+					]
+				}
 			},
 			{
 				$lookup: {
