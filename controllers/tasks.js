@@ -10,6 +10,8 @@ export async function createTask(req, res) {
 		// coming from the add task user form in the front end
 		const { title, description, project, team, owner, priority, perspective, dueDate } = req.body
 
+		console.log('dueDate', dueDate)
+
 		const ownerId = owner.split('|')[0]
 		const newTask = new Task({
 			title,
@@ -29,6 +31,7 @@ export async function createTask(req, res) {
 		// response
 		res.status(201).json(savedTask)
 	} catch (error) {
+		console.log('error.message', error.message)
 		res.status(500).json({ error: error.message })
 	}
 }
