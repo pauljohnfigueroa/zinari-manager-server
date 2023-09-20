@@ -8,8 +8,10 @@ import { verifyToken } from '../middleware/auth.js'
 
 /* Read Routes */
 router.get('/:name', verifyToken, getRole)
-router.post('/', verifyToken, createRole)
 router.get('/', verifyToken, getRoles)
+
+/* Create Routes */
+router.post('/', verifyToken, createRole)
 
 /* Update Routes */
 router.patch('/:id', verifyToken, updateRole)

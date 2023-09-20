@@ -63,7 +63,6 @@ export async function getProjectTeams(req, res) {
 				}
 			}
 		])
-		//console.log(projTeams)
 		res.status(200).json(projTeams)
 	} catch (error) {
 		res.status(500).json({ error: error.mesages })
@@ -73,7 +72,6 @@ export async function getProjectTeams(req, res) {
 export async function getProjectTeamMembers(req, res) {
 	const { teams } = req.body
 	const teamIds = teams.map(team => new mongoose.Types.ObjectId(team._id))
-	// console.log('teamIds', teamIds)
 
 	try {
 		const teamMembers = await Team.aggregate([

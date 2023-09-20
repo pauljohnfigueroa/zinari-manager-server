@@ -21,7 +21,10 @@ router.post('/', verifyToken, createProject)
 router.get('/:id', verifyToken, getProject)
 router.get('/', verifyToken, getProjects)
 router.get('/:projId/teams', verifyToken, getProjectTeams)
+
+/* Create Routes */
 router.post('/teams/members', verifyToken, getProjectTeamMembers)
+
 /* Update Routes */
 router.patch('/:id', verifyToken, updateProject)
 

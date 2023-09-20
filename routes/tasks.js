@@ -21,8 +21,10 @@ router.get('/:id', verifyToken, getTask)
 router.get('/:projectId/:teamId/tasks', verifyToken, getTeamTasks) // change path to /:projectId/:teamId
 router.get('/:taskId/comments', verifyToken, getTaskComments)
 router.get('/:taskId/:teamId/details', verifyToken, getTaskDetails)
-router.post('/', verifyToken, createTask)
 router.post('/user', verifyToken, getUserTasks)
+
+/* Create Routes */
+router.post('/', verifyToken, createTask)
 router.post('/comment', verifyToken, createComment)
 
 /* Update Routes */

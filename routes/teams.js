@@ -12,13 +12,13 @@ import {
 	getTeamMembers
 } from '../controllers/teams.js'
 
-/* Create Routes */
-router.post('/', verifyToken, createTeam)
-
 /* Read Routes */
 router.get('/:id', verifyToken, getTeam)
 router.get('/', verifyToken, getTeams)
 router.get('/:id/members', verifyToken, getTeamMembers)
+
+/* Create Routes */
+router.post('/', verifyToken, createTeam)
 
 /* Update Routes */
 router.patch('/:id', verifyToken, updateTeam)

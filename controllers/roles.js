@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-
 import Role from '../models/Role.js'
 
 /* 
