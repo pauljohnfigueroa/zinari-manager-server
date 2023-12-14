@@ -78,5 +78,5 @@ mongoose
 		})
 	})
 	.catch(error => {
-		console.log(`${error}. Can not connect.`)
+		console.log(`${error}. Cannot connect.`)
 	})
